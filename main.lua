@@ -1,5 +1,11 @@
 -- virtual resolution handling library
+-- https://github.com/Ulydev/push
 push = require 'push'
+
+-- https://github.com/vrld/hump/blob/master/class.lua
+Class = require 'class'
+
+require 'Bird'
 
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
@@ -32,6 +38,8 @@ function love.load()
        resizable = true,
        fullscreen = false
    })
+
+   bird = Bird()
 end
 
 function love.resize(w, h)
@@ -53,6 +61,8 @@ function love.draw()
     -- draw the ground on top of the background, toward the bottom of the screen,
     -- at its negative looping point
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
+
+    bird:render()
 
     push:finish()
 end
