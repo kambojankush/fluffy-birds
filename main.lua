@@ -29,6 +29,9 @@ local groundScroll = 0
 local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
+-- our bird sprite
+local bird = Bird()
+
 function love.load()
    love.graphics.setDefaultFilter('nearest', 'nearest')
    love.window.setTitle('Flappy Birds')
@@ -38,8 +41,6 @@ function love.load()
        resizable = true,
        fullscreen = false
    })
-
-   bird = Bird()
 end
 
 function love.resize(w, h)
@@ -51,6 +52,8 @@ function love.update(dt)
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
     -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+
+    bird:update(dt)
 end
 
 function love.draw()
