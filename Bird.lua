@@ -18,6 +18,11 @@ end
 
 function Bird:update(dt)
     self.dy = self.dy + GRAVITY * dt
+    
+    -- anti-gravity const = -5 (add a sudden burst of negative gravity if we hit space)
+    if love.keyboard.wasPressed('space') == true then
+        self.dy = -5
+    end
 
     self.y = self.y + self.dy
 end

@@ -2,6 +2,7 @@
 -- https://github.com/Ulydev/push
 push = require 'push'
 
+-- classic OOP class library
 -- https://github.com/vrld/hump/blob/master/class.lua
 Class = require 'class'
 
@@ -41,6 +42,9 @@ function love.load()
        resizable = true,
        fullscreen = false
    })
+
+   -- initialize input table
+   love.keyboard.keysPressed = {}
 end
 
 function love.resize(w, h)
@@ -54,6 +58,8 @@ function love.update(dt)
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
     bird:update(dt)
+
+    love.keyboard.keysPressed = {}
 end
 
 function love.draw()
@@ -62,7 +68,8 @@ function love.draw()
     -- draw the background at the negative looping point
     love.graphics.draw(background, -backgroundScroll, 0)
     -- draw the ground on top of the background, toward the bottom of the screen,
-    -- at its negative looping point
+    -- at its negative looping point 
+    -- (height of ground = 16)
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
     bird:render()
@@ -71,7 +78,16 @@ function love.draw()
 end
 
 function love.keypressed(key)   
+    love.keyboard.keysPressed[key] = true
     if key == 'escape' then
         love.event.quit()
+    end
+end
+
+function love.keyboard.wasPressed(key)
+    if love.keyboard.keysPressed[key] then 
+        return true
+    else
+        return false
     end
 end
