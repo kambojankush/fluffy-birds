@@ -8,6 +8,8 @@ Class = require 'class'
 
 require 'Bird'
 
+require 'Pipe'
+
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -33,10 +35,17 @@ local GROUND_SCROLL_SPEED = 60
 -- our bird sprite
 local bird = Bird()
 
+-- table to store pipe sprites
+local pipes = {}
+
+local spawnTimer = 0
+
 function love.load()
    love.graphics.setDefaultFilter('nearest', 'nearest')
    love.window.setTitle('Flappy Birds')
    
+   math.randomseed(os.time())
+
    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
        vsync = true, 
        resizable = true,
@@ -57,6 +66,20 @@ function love.update(dt)
     -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
+    spawnTimer = spawnTimer + dt
+    if spawnTimer > 2 then
+        table.insert(pipes, Pipe())
+        spawnTimer = 0
+    end
+
+    for k, pipe in pairs(pipes) do
+        pipe:update(dt)
+        
+        if pipe.x < -pipe.width then
+            table.remove(pipes, k)
+        end
+    end
+
     bird:update(dt)
 
     love.keyboard.keysPressed = {}
@@ -67,6 +90,11 @@ function love.draw()
 
     -- draw the background at the negative looping point
     love.graphics.draw(background, -backgroundScroll, 0)
+
+    for k, pipe in pairs(pipes) do
+        pipe:render()
+    end
+
     -- draw the ground on top of the background, toward the bottom of the screen,
     -- at its negative looping point 
     -- (height of ground = 16)
