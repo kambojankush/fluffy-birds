@@ -10,6 +10,8 @@ require 'Bird'
 
 require 'Pipe'
 
+require 'PipePair'
+
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -36,9 +38,12 @@ local GROUND_SCROLL_SPEED = 60
 local bird = Bird()
 
 -- table to store pipe sprites
-local pipes = {}
+local pipePairs = {}
 
 local spawnTimer = 0
+
+-- initialize our last recorded Y value for a gap placement to base other gaps off of
+lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 function love.load()
    love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -67,20 +72,27 @@ function love.update(dt)
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
     spawnTimer = spawnTimer + dt
+    
     if spawnTimer > 2 then
-        table.insert(pipes, Pipe())
+        local y = math.max( -PIPE_HEIGHT + 10,
+                  math.min(lastY + math.random(-40,40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)
+        )
+        lastY = y 
+        table.insert(pipePairs, PipePair(y))
         spawnTimer = 0
     end
 
-    for k, pipe in pairs(pipes) do
-        pipe:update(dt)
-        
-        if pipe.x < -pipe.width then
-            table.remove(pipes, k)
-        end
+    bird:update(dt)
+    
+    for k, pair in pairs(pipePairs) do
+        pair:update(dt)
     end
 
-    bird:update(dt)
+    for k, pair in pairs(pipePairs) do
+        if pair.remove then
+            table.remove(pipePairs, k)
+        end
+    end
 
     love.keyboard.keysPressed = {}
 end
@@ -91,8 +103,8 @@ function love.draw()
     -- draw the background at the negative looping point
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    for k, pipe in pairs(pipes) do
-        pipe:render()
+    for k, pair in pairs(pipePairs) do
+        pair:render()
     end
 
     -- draw the ground on top of the background, toward the bottom of the screen,

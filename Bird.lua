@@ -13,7 +13,7 @@ function Bird:init()
 end
 
 function Bird:render()
-    love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1)
 end
 
 function Bird:update(dt)
