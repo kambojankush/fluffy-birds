@@ -42,6 +42,9 @@ local pipePairs = {}
 
 local spawnTimer = 0
 
+-- test to detect collision and immediately pause the game
+local scrolling = true
+
 -- initialize our last recorded Y value for a gap placement to base other gaps off of
 lastY = -PIPE_HEIGHT + math.random(80) + 20
 
@@ -66,31 +69,39 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
-    -- scroll background by preset speed * dt, looping back to 0 after the looping point
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if scrolling then 
+        -- scroll background by preset speed * dt, looping back to 0 after the looping point
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    spawnTimer = spawnTimer + dt
-    
-    if spawnTimer > 2 then
-        local y = math.max( -PIPE_HEIGHT + 10,
-                  math.min(lastY + math.random(-40,40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)
-        )
-        lastY = y 
-        table.insert(pipePairs, PipePair(y))
-        spawnTimer = 0
-    end
+        spawnTimer = spawnTimer + dt
+        
+        if spawnTimer > 2 then
+            local y = math.max( -PIPE_HEIGHT + 10,
+                    math.min(lastY + math.random(-40,40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)
+            )
+            lastY = y 
+            table.insert(pipePairs, PipePair(y))
+            spawnTimer = 0
+        end
 
-    bird:update(dt)
-    
-    for k, pair in pairs(pipePairs) do
-        pair:update(dt)
-    end
+        bird:update(dt)
+        
+        for k, pair in pairs(pipePairs) do
+            pair:update(dt)
 
-    for k, pair in pairs(pipePairs) do
-        if pair.remove then
-            table.remove(pipePairs, k)
+            for l, pipe in pairs(pair.pipes) do 
+                if bird:collides(pipe) then
+                    scrolling = false
+                end
+            end
+        end
+
+        for k, pair in pairs(pipePairs) do
+            if pair.remove then
+                table.remove(pipePairs, k)
+            end
         end
     end
 
