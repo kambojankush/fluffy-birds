@@ -12,6 +12,10 @@ require 'Pipe'
 
 require 'PipePair'
 
+require 'StateMachine'
+require 'states/BaseState'
+require 'states/TitleScreenState'
+require 'states/PlayState'
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -34,31 +38,33 @@ local groundScroll = 0
 local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
--- our bird sprite
-local bird = Bird()
-
--- table to store pipe sprites
-local pipePairs = {}
-
-local spawnTimer = 0
-
--- test to detect collision and immediately pause the game
-local scrolling = true
-
--- initialize our last recorded Y value for a gap placement to base other gaps off of
-lastY = -PIPE_HEIGHT + math.random(80) + 20
-
 function love.load()
-   love.graphics.setDefaultFilter('nearest', 'nearest')
-   love.window.setTitle('Flappy Birds')
-   
-   math.randomseed(os.time())
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.window.setTitle('Flappy Birds')
+    
+    -- initilaize all the rquired fonts
+    smallFont = love.graphics.newFont('font.ttf', 8)
+    mediumFont = love.graphics.newFont('flappy.ttf', 14)
+    flappyFont = love.graphics.newFont('flappy.ttf', 28)
+    hugeFont = love.graphics.newFont('flappy.ttf', 56)
 
-   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-       vsync = true, 
-       resizable = true,
-       fullscreen = false
-   })
+    -- set current font to flappy font
+    love.graphics.setFont(flappyFont)
+
+    math.randomseed(os.time())
+
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
+        vsync = true, 
+        resizable = true,
+        fullscreen = false
+    })
+
+    -- initialize state machine with all state-returning functions
+    gStateMachine = StateMachine{
+        ['title'] = function() return TitleScreenState() end,
+        ['play'] = function() return PlayState() end,
+    }
+    gStateMachine:change('title')
 
    -- initialize input table
    love.keyboard.keysPressed = {}
@@ -69,42 +75,11 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
-    if scrolling then 
-        -- scroll background by preset speed * dt, looping back to 0 after the looping point
-        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-        -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
-        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
-
-        spawnTimer = spawnTimer + dt
-        
-        if spawnTimer > 2 then
-            local y = math.max( -PIPE_HEIGHT + 10,
-                    math.min(lastY + math.random(-40,40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)
-            )
-            lastY = y 
-            table.insert(pipePairs, PipePair(y))
-            spawnTimer = 0
-        end
-
-        bird:update(dt)
-        
-        for k, pair in pairs(pipePairs) do
-            pair:update(dt)
-
-            for l, pipe in pairs(pair.pipes) do 
-                if bird:collides(pipe) then
-                    scrolling = false
-                end
-            end
-        end
-
-        for k, pair in pairs(pipePairs) do
-            if pair.remove then
-                table.remove(pipePairs, k)
-            end
-        end
-    end
-
+    -- scroll background by preset speed * dt, looping back to 0 after the looping point
+    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+    -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
+    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    gStateMachine:update(dt)
     love.keyboard.keysPressed = {}
 end
 
@@ -114,17 +89,11 @@ function love.draw()
     -- draw the background at the negative looping point
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    for k, pair in pairs(pipePairs) do
-        pair:render()
-    end
-
+    gStateMachine:render()
     -- draw the ground on top of the background, toward the bottom of the screen,
     -- at its negative looping point 
     -- (height of ground = 16)
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
-
-    bird:render()
-
     push:finish()
 end
 
