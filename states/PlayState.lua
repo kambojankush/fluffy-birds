@@ -7,6 +7,9 @@ PIPE_HEIGHT = 288
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
+BASE_TIMER = 2
+timer = BASE_TIMER
+
 function PlayState:init()
     -- our bird sprite
     self.bird = Bird()
@@ -20,14 +23,19 @@ end
 
 function PlayState:update(dt)
     self.spawnTimer = self.spawnTimer + dt
-    
-    if self.spawnTimer > 2 then
+    if self.spawnTimer > timer then
         local y = math.max( -PIPE_HEIGHT + 10,
                 math.min(self.lastY + math.random(-40,40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT)
         )
         self.lastY = y 
         table.insert(self.pipePairs, PipePair(y))
         self.spawnTimer = 0
+        rate = math.random(3)
+        if rate ~= 3 then
+            timer = BASE_TIMER + math.min(math.max(-0.15, math.random(-1, 1), 0.75))
+        else
+            timer = BASE_TIMER + math.min(math.max(-0.75, math.random(-1, 1), 0.15))
+        end
     end
 
     self.bird:update(dt)
@@ -70,11 +78,10 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    self.bird:render()
     for k, pair in pairs(self.pipePairs) do
         pair:render()
-    end
-
+    end 
+    self.bird:render()
     love.graphics.setFont(flappyFont)
     love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
 end
