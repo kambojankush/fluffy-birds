@@ -7,8 +7,8 @@ PIPE_HEIGHT = 288
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
-BASE_TIMER = 2
-timer = BASE_TIMER
+local BASE_TIMER = 2
+local timer = BASE_TIMER
 
 function PlayState:init()
     -- our bird sprite
