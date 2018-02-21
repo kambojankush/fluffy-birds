@@ -37,8 +37,8 @@ local ground = love.graphics.newImage('ground.png')
 local groundScroll = 0
 
 -- speed at which we should scroll our images
-local BACKGROUND_SCROLL_SPEED = 30
-local GROUND_SCROLL_SPEED = 60
+local BACKGROUND_SCROLL_SPEED = 50
+local GROUND_SCROLL_SPEED = 100
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
