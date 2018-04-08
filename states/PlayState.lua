@@ -16,12 +16,13 @@ function PlayState:init()
     -- table to store pipe sprites
     self.pipePairs = {}
     self.spawnTimer = 0
--- initialize our last recorded Y value for a gap placement to base other gaps off of
+    -- initialize our last recorded Y value for a gap placement to base other gaps off of
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
     self.score = 0
 end
 
 function PlayState:update(dt)
+    -- spawn pipepairs
     self.spawnTimer = self.spawnTimer + dt
     if self.spawnTimer > timer then
         local y = math.max( -PIPE_HEIGHT + 10,
@@ -38,8 +39,10 @@ function PlayState:update(dt)
         end
     end
 
+    -- update bird
     self.bird:update(dt)
     
+    -- collision check
     for k, pair in pairs(self.pipePairs) do
         pair:update(dt)
 
@@ -63,13 +66,14 @@ function PlayState:update(dt)
         end
     end
 
+    -- remove exhausted pairs
     for k, pair in pairs(self.pipePairs) do
         if pair.remove then
             table.remove(self.pipePairs, k)
         end
     end
 
-    -- reset if we get to the ground
+    -- ground collision
     if self.bird.y > VIRTUAL_HEIGHT - 15 then
         gStateMachine:change('score', {score = self.score})
         sounds['explosion']:play()
