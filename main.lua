@@ -27,8 +27,8 @@ VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
 -- background image and starting scroll location (X axis)
-local background1 = love.graphics.newImage('background11.jpg')
-local background2 = love.graphics.newImage('background14.jpg')
+local background1 = love.graphics.newImage('assets/background11.jpg')
+local background2 = love.graphics.newImage('assets/background14.jpg')
 local backgroundScroll1 = 0
 local backgroundScroll2 = 0
 -- point at which we should loop our background back to X 0
@@ -36,7 +36,7 @@ local BACKGROUND_LOOPING_POINT1 = 1
 local BACKGROUND_LOOPING_POINT2 = 1000
 
 -- ground image and starting scroll location (X axis)
-local ground = love.graphics.newImage('ground.png')
+local ground = love.graphics.newImage('assets/ground.png')
 local groundScroll = 0
 
 -- speed at which we should scroll our images
@@ -48,10 +48,10 @@ function love.load()
     love.window.setTitle('Fluffy Birds')
     
     -- initilaize all the rquired fonts
-    smallFont = love.graphics.newFont('font.ttf', 8)
-    mediumFont = love.graphics.newFont('flappy.ttf', 14)
-    flappyFont = love.graphics.newFont('flappy.ttf', 28)
-    hugeFont = love.graphics.newFont('flappy.ttf', 56)
+    smallFont = love.graphics.newFont('assets/font.ttf', 8)
+    mediumFont = love.graphics.newFont('assets/flappy.ttf', 14)
+    flappyFont = love.graphics.newFont('assets/flappy.ttf', 28)
+    hugeFont = love.graphics.newFont('assets/flappy.ttf', 56)
 
     -- set current font to flappy font
     love.graphics.setFont(flappyFont)
@@ -74,13 +74,13 @@ function love.load()
     gStateMachine:change('title')
 
     sounds = {
-        ['jump'] = love.audio.newSource('jump.wav', 'static'),
-        ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
-        ['hurt'] = love.audio.newSource('hurt.wav', 'static'),
-        ['score'] = love.audio.newSource('score.wav', 'static'),
+        ['jump'] = love.audio.newSource('sounds/jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('sounds/explosion.wav', 'static'),
+        ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
 
-        -- https://freesound.org/people/xsgianni/sounds/388079/
-        ['music'] = love.audio.newSource('music.mp3', 'static')
+        -- https://www.youtube.com/watch?v=xw3C03Ba8Dk
+        ['music'] = love.audio.newSource('sounds/music.mp3', 'static')
     }
 
     -- kick off music

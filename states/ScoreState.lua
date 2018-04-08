@@ -1,10 +1,10 @@
 ScoreState = Class{__includes = BaseState}
 
-GOLD_MEDAL = love.graphics.newImage('gold.png')
-SILVER_MEDAL = love.graphics.newImage('silver.png')
-BRONZE_MEDAL = love.graphics.newImage('bronze.png')
+GOLD_MEDAL = love.graphics.newImage('assets/gold.png')
+SILVER_MEDAL = love.graphics.newImage('assets/silver.png')
+BRONZE_MEDAL = love.graphics.newImage('assets/bronze.png')
 
-local background = love.graphics.newImage('background6.jpg')
+local background = love.graphics.newImage('assets/background6.jpg')
 function ScoreState:enter(params)
     self.score = params.score
 end

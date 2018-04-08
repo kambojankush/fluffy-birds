@@ -1,6 +1,6 @@
 Pipe = Class{}
 
-local PIPE_IMAGE = love.graphics.newImage('pipe.png')
+local PIPE_IMAGE = love.graphics.newImage('assets/pipe.png')
 
 -- speed at which pipe should scroll
 PIPE_SPEED = 200
