@@ -45,7 +45,7 @@ local GROUND_SCROLL_SPEED = 100
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
-    love.window.setTitle('Flappy Birds')
+    love.window.setTitle('Fluffy Birds')
     
     -- initilaize all the rquired fonts
     smallFont = love.graphics.newFont('font.ttf', 8)
