@@ -6,3 +6,7 @@ ScreenShot
 ----------
 ![FluffyBird](./screens/titlescreen.png)
 ![FluffyBird](./screens/ingame_ss.png)
+
+NOTE
+-------
+Best played when high.
