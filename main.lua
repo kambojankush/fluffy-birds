@@ -27,10 +27,13 @@ VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
 -- background image and starting scroll location (X axis)
-local background = love.graphics.newImage('background.png')
-local backgroundScroll = 0
+local background1 = love.graphics.newImage('background11.jpg')
+local background2 = love.graphics.newImage('background14.jpg')
+local backgroundScroll1 = 0
+local backgroundScroll2 = 0
 -- point at which we should loop our background back to X 0
-local BACKGROUND_LOOPING_POINT = 413
+local BACKGROUND_LOOPING_POINT1 = 1
+local BACKGROUND_LOOPING_POINT2 = 1000
 
 -- ground image and starting scroll location (X axis)
 local ground = love.graphics.newImage('ground.png')
@@ -77,7 +80,7 @@ function love.load()
         ['score'] = love.audio.newSource('score.wav', 'static'),
 
         -- https://freesound.org/people/xsgianni/sounds/388079/
-        ['music'] = love.audio.newSource('marios_way.mp3', 'static')
+        ['music'] = love.audio.newSource('music.mp3', 'static')
     }
 
     -- kick off music
@@ -94,7 +97,8 @@ end
 
 function love.update(dt)
     -- scroll background by preset speed * dt, looping back to 0 after the looping point
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+    backgroundScroll1 = (backgroundScroll1 + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT1
+    backgroundScroll2 =  -300 +((backgroundScroll2 + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT2)
     -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
     gStateMachine:update(dt)
@@ -105,8 +109,12 @@ function love.draw()
     push:start()
 
     -- draw the background at the negative looping point
-    love.graphics.draw(background, -backgroundScroll, 0)
-
+    love.graphics.draw(background1, -backgroundScroll1, 0, 0, 0.3, 0.3)
+    
+    love.graphics.setColor(255,255,255,100)
+    love.graphics.draw(background2, -backgroundScroll2, 0, 0, 0.3, 0.3)
+    love.graphics.setColor(255,255,255,255)
+    
     gStateMachine:render()
     -- draw the ground on top of the background, toward the bottom of the screen,
     -- at its negative looping point 

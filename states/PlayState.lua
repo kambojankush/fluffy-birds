@@ -1,6 +1,6 @@
 PlayState = Class{__includes = BaseState}
 
-PIPE_SPEED = 60
+PIPE_SPEED = 100
 PIPE_WIDTH = 70
 PIPE_HEIGHT = 288
 

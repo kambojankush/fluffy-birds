@@ -3,9 +3,9 @@ Bird = Class{}
 local GRAVITY = 2.25
 
 function Bird:init()
-    self.image = love.graphics.newImage('bird.png')
-    self.width = self.image:getWidth()
-    self.height = self.image:getHeight()
+    self.image = love.graphics.newImage('bird2.png')
+    self.width = self.image:getWidth()*0.03
+    self.height = self.image:getHeight()*0.03
 
     self.x = VIRTUAL_WIDTH / 2 - (self.width / 2)
     self.y = VIRTUAL_HEIGHT / 2 - (self.height / 2)
@@ -13,7 +13,7 @@ function Bird:init()
 end
 
 function Bird:render()
-    love.graphics.draw(self.image, self.x, self.y, 0, 1, 1)
+    love.graphics.draw(self.image, self.x, self.y, 0, 0.03, 0.03)
 end
 
 function Bird:update(dt)
