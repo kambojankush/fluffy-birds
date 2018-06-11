@@ -9,3 +9,7 @@ ScreenShot
 NOTE
 -------
 Best played when high.
+
+Known Issues
+-------
+Gravity doesn't scale well on some systems. (Bird seems to float)
