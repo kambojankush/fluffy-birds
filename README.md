@@ -15,3 +15,5 @@ Best played when high.
 Known Issues
 -------
 ~Gravity doesn't scale well on some systems. (Bird seems to float)~ :heavy_check_mark: FIXED
+
+Gravity too high for higher fps (Works fine only for fps=30)
