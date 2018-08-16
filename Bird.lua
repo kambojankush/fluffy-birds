@@ -1,6 +1,6 @@
 Bird = Class{}
 
-local GRAVITY = 2.25
+local GRAVITY = (25/30)
 
 function Bird:init()
     self.image = love.graphics.newImage('assets/bird2.png')
@@ -14,14 +14,16 @@ end
 
 function Bird:render()
     love.graphics.draw(self.image, self.x, self.y, 0, 0.03, 0.03)
+    print(fps)
 end
 
 function Bird:update(dt)
-    self.dy = self.dy + GRAVITY * dt
-    
+    fps = love.timer.getFPS()
+    self.dy = self.dy + GRAVITY * dt * fps
+
     -- anti-gravity const = -5 (add a sudden burst of negative gravity if we hit space)
     if love.keyboard.wasPressed('space') == true then
-        self.dy = -0.45
+        self.dy = -(6.5) *(fps/30)
         sounds['jump']:play()
     end
 

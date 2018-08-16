@@ -46,7 +46,7 @@ local GROUND_SCROLL_SPEED = 100
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle('Fluffy Birds')
-    
+
     -- initilaize all the rquired fonts
     smallFont = love.graphics.newFont('assets/font.ttf', 8)
     mediumFont = love.graphics.newFont('assets/flappy.ttf', 14)
@@ -59,7 +59,7 @@ function love.load()
     math.randomseed(os.time())
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-        vsync = true, 
+        vsync = true,
         resizable = true,
         fullscreen = false
     })
@@ -97,6 +97,7 @@ end
 
 function love.update(dt)
     -- scroll background by preset speed * dt, looping back to 0 after the looping point
+    fps = love.timer.getFPS()
     backgroundScroll1 = (backgroundScroll1 + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT1
     backgroundScroll2 =  -300 +((backgroundScroll2 + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT2)
     -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
@@ -110,20 +111,22 @@ function love.draw()
 
     -- draw the background at the negative looping point
     love.graphics.draw(background1, -backgroundScroll1, 0, 0, 0.3, 0.3)
-    
+
     love.graphics.setColor(255,255,255,100)
     love.graphics.draw(background2, -backgroundScroll2, 0, 0, 0.3, 0.3)
     love.graphics.setColor(255,255,255,255)
-    
+
     gStateMachine:render()
+
+    displayFPS()
     -- draw the ground on top of the background, toward the bottom of the screen,
-    -- at its negative looping point 
+    -- at its negative looping point
     -- (height of ground = 16)
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
     push:finish()
 end
 
-function love.keypressed(key)   
+function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
     if key == 'escape' then
         love.event.quit()
@@ -131,9 +134,15 @@ function love.keypressed(key)
 end
 
 function love.keyboard.wasPressed(key)
-    if love.keyboard.keysPressed[key] then 
+    if love.keyboard.keysPressed[key] then
         return true
     else
         return false
     end
+end
+
+function displayFPS()
+    love.graphics.setFont(smallFont)
+    love.graphics.setColor(0,255,0,255)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
