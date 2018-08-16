@@ -1,4 +1,4 @@
-# Fluffy-Birds [![Download](https://img.shields.io/badge/Download-v1.0.1-blue.svg)](https://1drv.ms/u/s!AsSo4Y2fR4LnkmCCFkLoCnHbP3AX)
+# Fluffy-Birds [![Download](https://img.shields.io/badge/Download-Normal--v1.2-blue.svg)](https://1drv.ms/u/s!AsSo4Y2fR4LnlAo_-SDEBtfTMKCT)  [![Download](https://img.shields.io/badge/Download-Psychedelic--v1.2-green.svg)](https://1drv.ms/u/s!AsSo4Y2fR4LnlAs3ArRsO8rkiy6v)
 A Flappy Bird remake made with [LÖVE](https://love2d.org/).
 
 ScreenShot
@@ -12,4 +12,4 @@ Best played when high.
 
 Known Issues
 -------
-Gravity doesn't scale well on some systems. (Bird seems to float)
+~Gravity doesn't scale well on some systems. (Bird seems to float)~ :heavy_check_mark: FIXED
